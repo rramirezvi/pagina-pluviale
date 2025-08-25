@@ -13,7 +13,9 @@
     <!-- NAV -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Estrada & Crow</a>
+            <a class="navbar-brand" href="#">
+                <img src="img/logoEstrada.svg" alt="Estrada & Crow" class="logo-ec">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -30,13 +32,77 @@
     </nav>
 
     <!-- HERO -->
-    <section class="hero">
-        <div class="container">
-            <h1>Gestión de Cobranzas con Respaldo de Abogados Especialistas</h1>
-            <p class="lead">Recupere su cartera con el acompañamiento de abogados expertos en derecho civil, comercial y
-                financiero. Soluciones legales, éticas y efectivas para proteger sus intereses.</p>
+    <!-- HERO (Carrusel) -->
+    <section class="hero p-0">
+        <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000"
+            data-bs-pause="hover">
+
+            <!-- Indicadores -->
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+
+            <!-- Slides -->
+            <div class="carousel-inner">
+
+                <!-- Slide 1 -->
+                <div class="carousel-item active hero-slide" style="background-image: url('img/estrada3.png');">
+                    <span class="hero-overlay"></span>
+                    <div class="container h-100 d-flex align-items-center">
+                        <div class="hero-caption">
+                            <h1>Gestión de Cobranzas con Respaldo de Abogados Especialistas</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-item hero-slide" style="background-image: url('img/estrada4.png');">
+                    <span class="hero-overlay"></span>
+                    <div class="container h-100 d-flex align-items-center">
+                        <div class="hero-caption">
+                            <h2>Recupere su cartera con el acompañamiento de abogados expertos en derecho civil,
+                                comercial y financiero</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-item hero-slide" style="background-image: url('img/estrada6.png');">
+                    <span class="hero-overlay"></span>
+                    <div class="container h-100 d-flex align-items-center">
+                        <div class="hero-caption">
+                            <h2>Soluciones legales, éticas y efectivas para proteger sus intereses.</h2>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Controles -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev"
+                aria-label="Anterior">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next"
+                aria-label="Siguiente">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+
+        </div>
+        <div class="hero-intro py-4">
+            <div class="container text-center">
+                <p class="lead text-white">
+                    El Estudio Jurídico <strong>ESTRADA & CROW</strong> es una firma de abogados fundada en 1983 en la
+                    ciudad de Guayaquil, sede de su oficina principal, que ofrece servicios de asesoría jurídica,
+                    consultoría y patrocinio legal en distintas ramas del Derecho, en todo el país.
+                </p>
+            </div>
         </div>
     </section>
+
 
     <!-- QUIENES SOMOS -->
     <section id="quienes" class="section">

@@ -3,6 +3,8 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background: url('img/estrada2.png') center center / cover no-repeat fixed;
     color: #0d1b2a;
+    padding-top: 80px;
+    /* igual a la altura del navbar */
 }
 
 /* Overlay oscuro para mejorar contraste */
@@ -26,13 +28,114 @@ body::before {
     color: #fff !important;
 }
 
-/* HERO */
-.hero {
-    color: #fff;
-    padding: 80px 0;
-    text-align: center;
-    background: transparent;
+.logo-ec {
+    height: 60px;
+    /* tamaño fijo de alto */
+    width: auto;
+    /* mantiene proporción */
+    display: block;
+    /* asegura que no quede inline extraño */
 }
+
+/* HERO */
+/* HERO Carrusel */
+.hero {
+    position: relative;
+    overflow: hidden;
+    padding: 60px 0;
+    background: transparent !important;
+}
+
+.hero .carousel,
+.hero .carousel-inner,
+.hero .carousel-item,
+.hero .hero-slide {
+    height: 70vh;
+    /* ajusta alto del hero */
+    min-height: 420px;
+}
+
+.hero .hero-slide {
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.hero .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 27, 42, 0.35) 0%, rgba(13, 27, 42, 0.55) 60%, rgba(13, 27, 42, 0.65) 100%);
+    z-index: 1;
+}
+
+/* Texto del hero */
+.hero .hero-caption {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    max-width: 920px;
+    padding: 0 12px;
+}
+
+.hero .hero-caption h1,
+.hero .hero-caption h2 {
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
+    margin: 0;
+}
+
+.hero .hero-caption h1 {
+    font-size: clamp(1.8rem, 3.6vw, 3rem);
+}
+
+.hero .hero-caption h2 {
+    font-size: clamp(1.4rem, 3.2vw, 2.4rem);
+}
+
+/* Indicadores y controles con acento naranja del logo (#f36c21) */
+.carousel-indicators [data-bs-target] {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.carousel-indicators .active {
+    background-color: #f36c21;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+}
+
+.hero-intro {
+    background: rgba(13, 27, 42, 0.85);
+    /* mismo tono del navbar pero semi-transparente */
+    backdrop-filter: blur(4px);
+}
+
+.hero-intro p {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .hero .carousel,
+    .hero .carousel-inner,
+    .hero .carousel-item,
+    .hero .hero-slide {
+        height: 56vh;
+        min-height: 360px;
+    }
+}
+
 
 /* === Glassmorphism para las secciones === */
 .section {
@@ -102,6 +205,42 @@ footer {
     border-radius: 12px;
 }
 
+/* Hover naranja exacto en los enlaces del navbar */
+.navbar-nav .nav-link {
+    color: #fff !important;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+/* Línea debajo en hover */
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #f36c21;
+    /* naranja del logo */
+    transition: width 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+    color: #f36c21 !important;
+}
+
+.navbar-nav .nav-link:hover::after,
+.navbar-nav .nav-link:focus::after {
+    width: 100%;
+}
+
+/* También mantener la línea en el activo */
+.navbar-nav .nav-link.active::after {
+    width: 100%;
+}
+
+
 /* Responsive */
 @media (max-width: 768px) {
     .hero {
@@ -110,5 +249,11 @@ footer {
 
     .section {
         padding: 40px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .logo-ec {
+        height: 45px;
     }
 }
