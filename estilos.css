@@ -1,0 +1,114 @@
+/* === Fondo global único === */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: url('img/estrada2.png') center center / cover no-repeat fixed;
+    color: #0d1b2a;
+}
+
+/* Overlay oscuro para mejorar contraste */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(13, 27, 42, 0.45);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* NAV */
+.navbar {
+    background: rgba(13, 27, 42, 0.85);
+    backdrop-filter: blur(6px);
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+    color: #fff !important;
+}
+
+/* HERO */
+.hero {
+    color: #fff;
+    padding: 80px 0;
+    text-align: center;
+    background: transparent;
+}
+
+/* === Glassmorphism para las secciones === */
+.section {
+    padding: 60px 0;
+    background: transparent !important;
+}
+
+.section>.container {
+    background: rgba(13, 27, 42, 0.75);
+    /* azul oscuro translúcido */
+    border-radius: 16px;
+    padding: 32px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    /* texto claro */
+}
+
+/* HERO y FOOTER sin panel */
+.hero>.container {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+footer .container {
+    background: transparent;
+    box-shadow: none;
+    padding: 20px 0;
+}
+
+/* FOOTER */
+footer {
+    background: rgba(13, 27, 42, 0.85);
+    color: #ced4da;
+    text-align: center;
+}
+
+/* Botones y componentes */
+.btn-primary {
+    background: #fca311;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #e59400;
+}
+
+.card {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+}
+
+.form-control,
+.btn,
+.alert,
+.toast,
+.modal-content,
+.tooltip-inner,
+.popover,
+.badge,
+.progress {
+    border-radius: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero {
+        padding: 50px 0;
+    }
+
+    .section {
+        padding: 40px 0;
+    }
+}
