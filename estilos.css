@@ -17,7 +17,7 @@ body::before {
     z-index: -1;
 }
 
-/* NAV */
+/* ===== NAV ===== */
 .navbar {
     background: rgba(13, 27, 42, 0.85);
     backdrop-filter: blur(6px);
@@ -34,11 +34,10 @@ body::before {
     width: auto;
     /* mantiene proporción */
     display: block;
-    /* asegura que no quede inline extraño */
+    /* evita inline gaps */
 }
 
-/* HERO */
-/* HERO Carrusel */
+/* ===== HERO (Carrusel) ===== */
 .hero {
     position: relative;
     overflow: hidden;
@@ -52,7 +51,7 @@ body::before {
 .hero .carousel-item,
 .hero .hero-slide {
     height: 70vh;
-    /* ajusta alto del hero */
+    /* alto hero */
     min-height: 420px;
 }
 
@@ -97,7 +96,7 @@ body::before {
     font-size: clamp(1.4rem, 3.2vw, 2.4rem);
 }
 
-/* Indicadores y controles con acento naranja del logo (#f36c21) */
+/* Indicadores y controles con acento naranja */
 .carousel-indicators [data-bs-target] {
     width: 10px;
     height: 10px;
@@ -116,7 +115,6 @@ body::before {
 
 .hero-intro {
     background: rgba(13, 27, 42, 0.85);
-    /* mismo tono del navbar pero semi-transparente */
     backdrop-filter: blur(4px);
 }
 
@@ -126,21 +124,7 @@ body::before {
     line-height: 1.6;
 }
 
-
-/* Responsive */
-@media (max-width: 768px) {
-
-    .hero .carousel,
-    .hero .carousel-inner,
-    .hero .carousel-item,
-    .hero .hero-slide {
-        height: 56vh;
-        min-height: 360px;
-    }
-}
-
-
-/* === Glassmorphism para las secciones === */
+/* ===== Secciones (Glassmorphism) ===== */
 .section {
     padding: 60px 0;
     background: transparent !important;
@@ -172,14 +156,14 @@ footer .container {
     padding: 20px 0;
 }
 
-/* FOOTER */
+/* ===== FOOTER ===== */
 footer {
     background: rgba(13, 27, 42, 0.85);
     color: #ced4da;
     text-align: center;
 }
 
-/* Botones y componentes */
+/* ===== Componentes ===== */
 .btn-primary {
     background: #fca311;
     border: none;
@@ -208,14 +192,13 @@ footer {
     border-radius: 12px;
 }
 
-/* Hover naranja exacto en los enlaces del navbar */
+/* ===== Navbar hover naranja con línea ===== */
 .navbar-nav .nav-link {
     color: #fff !important;
     position: relative;
     transition: color 0.3s ease;
 }
 
-/* Línea debajo en hover */
 .navbar-nav .nav-link::after {
     content: "";
     position: absolute;
@@ -238,39 +221,11 @@ footer {
     width: 100%;
 }
 
-/* También mantener la línea en el activo */
 .navbar-nav .nav-link.active::after {
     width: 100%;
 }
 
-
-/* Responsive */
-@media (max-width: 768px) {
-    .hero {
-        padding: 50px 0;
-    }
-
-    .section {
-        padding: 40px 0;
-    }
-}
-
-@media (max-width: 768px) {
-    .logo-ec {
-        height: 45px;
-    }
-
-    .imagen-wrapper {
-        min-height: 400px;
-        margin: 20px 0;
-    }
-
-    #quienes .row {
-        flex-direction: column;
-    }
-}
-
-/* Imagen en Quienes Somos */
+/* ===== Imagen en “Quiénes Somos” ===== */
 .imagen-wrapper {
     height: 100%;
     border-radius: 16px;
@@ -290,4 +245,170 @@ footer {
 /* Iconos de lista con color naranja del logo */
 .valor-icon {
     color: #f36c21;
+}
+
+/* ===== Políticas (Acordeón) ===== */
+/* Ítem y borde */
+#politica .accordion-item {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Header cerrado = oscuro; abierto = naranja */
+#politica .accordion-button {
+    background: rgba(13, 27, 42, 0.9) !important;
+    /* cerrado */
+    color: #fff !important;
+    font-weight: 600;
+    box-shadow: none !important;
+}
+
+#politica .accordion-button:not(.collapsed) {
+    background: #f36c21 !important;
+    /* abierto */
+    color: #fff !important;
+}
+
+#politica .accordion-button::after {
+    filter: invert(1) brightness(2);
+    /* chevron blanco */
+}
+
+/* Cuerpo del acordeón */
+#politica .accordion-collapse,
+#politica .accordion-body {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #fff !important;
+}
+
+/* Botones y links dentro de Políticas */
+#politica .btn-outline-primary {
+    border-color: #f36c21;
+    color: #f36c21;
+}
+
+#politica .btn-outline-primary:hover {
+    background: #f36c21;
+    color: #fff;
+}
+
+#politica .link-quejas {
+    color: #f36c21;
+}
+
+/* Modal de políticas */
+#modalPolitica .modal-content {
+    background: rgba(13, 27, 42, 0.95);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.no-copy {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.no-copy a {
+    user-select: text;
+}
+
+/* ===== Banner de Cookies (CMP) ===== */
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none;
+    z-index: 1080;
+    padding: 16px 20px;
+    background: rgba(13, 27, 42, .95);
+    color: #fff;
+    border-top: 2px solid #f36c21;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cookie-banner.show {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cookie-banner .cookie-text {
+    flex: 1;
+    font-size: 0.95rem;
+}
+
+.cookie-banner .btn-primary {
+    background: #f36c21;
+    border: none;
+}
+
+.cookie-banner .btn-primary:hover {
+    background: #d65f1d;
+}
+
+/* Footer link para reabrir preferencias */
+#open-cookie-center {
+    color: #f36c21;
+}
+
+/* Imagen dentro del modal de privacidad */
+#privacy-modal img {
+    border: 1px solid rgba(255, 255, 255, .1);
+}
+
+/* Opcional: asegurar altura del formulario en el modal */
+#modalTrabajo .modal-body {
+    padding: 0;
+}
+
+#trabajo-iframe-wrap {
+    height: 70vh;
+}
+
+#trabajo-iframe-wrap iframe {
+    display: block;
+}
+
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+
+    .hero .carousel,
+    .hero .carousel-inner,
+    .hero .carousel-item,
+    .hero .hero-slide {
+        height: 56vh;
+        min-height: 360px;
+    }
+
+    .hero {
+        padding: 50px 0;
+    }
+
+    .section {
+        padding: 40px 0;
+    }
+
+    .logo-ec {
+        height: 45px;
+    }
+
+    .imagen-wrapper {
+        min-height: 400px;
+        margin: 20px 0;
+    }
+
+    #quienes .row {
+        flex-direction: column;
+    }
+
+    .cookie-banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cookie-actions {
+        margin-top: 8px;
+    }
 }
