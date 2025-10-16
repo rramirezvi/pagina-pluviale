@@ -830,10 +830,10 @@
                         <li>Puedes solicitar acceso, rectificación, actualización o eliminación de tus datos.</li>
                         <li>Implementamos medidas técnicas y organizativas para prevenir accesos no autorizados.</li>
                     </ul>
-                    <p class="mb-2">Puedes revisar la política completa en la sección:
+                    <p class="mb-2">Puedes revisar la política completa:
                         <a href="#" id="open-datos-from-privacy" class="link-quejas">
-                            Políticas Institucionales → Protección de Datos Personales
-                        </a>.
+                            Ver Política Completa de Protección de Datos
+                        </a>
                     </p>
                     <div class="form-check mt-3 p-3 rounded" style="background:rgba(255,255,255,.05);">
                         <input class="form-check-input" type="checkbox" id="privacy-accept-check">
@@ -846,9 +846,6 @@
                         Contacto o quejas: <a
                             href="mailto:transparencia@estradacrow.com.ec">transparencia@estradacrow.com.ec</a>
                     </p>
-                </div>
-                <div class="modal-footer">
-                    <button id="privacy-accept" class="btn btn-primary" disabled>Aceptar y continuar</button>
                 </div>
             </div>
         </div>
@@ -916,21 +913,40 @@
     <script src="main.js"></script>
 
     <script>
-        (() => {
+        (function () {
+            // Cache en memoria para no volver a pedir el mismo archivo
+            const FILE_CACHE = new Map();
+
+            // Accesibilidad/seguridad: evitar insertar scripts
+            const sanitize = (html) => {
+                return html.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '');
+            };
+
             const modal = document.getElementById('modalPolitica');
             const titleEl = document.getElementById('modalPoliticaTitle');
             const bodyEl = document.getElementById('modalPoliticaBody');
             const loader = document.getElementById('policyLoading');
             const footer = document.getElementById('policyFooter');
 
-            // Cache en memoria para no volver a pedir el mismo archivo
-            const FILE_CACHE = new Map();
+            // SOLUCIÓN: Remover el foco antes de cerrar el modal
+            modal.addEventListener('hide.bs.modal', function () {
+                // Remover el foco del botón cerrar u cualquier otro elemento enfocado
+                if (document.activeElement && document.activeElement.closest('#modalPolitica')) {
+                    document.activeElement.blur();
+                }
+            });
 
-            // Accesibilidad/seguridad: evitar insertar scripts
-            const sanitize = (html) => {
-                // eliminamos <script> por seguridad básica (el contenido son documentos, no scripts)
-                return html.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '');
-            };
+            // Limpieza defensiva cuando se esconde
+            modal.addEventListener('hidden.bs.modal', () => {
+                // Asegurar que no quede foco en elementos del modal oculto
+                if (document.activeElement && document.activeElement.closest('#modalPolitica')) {
+                    document.activeElement.blur();
+                }
+
+                document.body.classList.remove('modal-open');
+                document.body.style.removeProperty('padding-right');
+                document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+            });
 
             modal.addEventListener('show.bs.modal', async (ev) => {
                 const btn = ev.relatedTarget;
@@ -968,30 +984,26 @@
                     loader.classList.add('d-none');
                     bodyEl.innerHTML = sanitize(html);
 
-                    // Si quieres, aquí podrías configurar un botón de descarga:
-                    // footer.innerHTML = '<a class="btn btn-outline-light" href="docs/OFICIAL.pdf" download>Descargar PDF</a>';
-                    // footer.classList.remove('d-none');
-
                     // Move focus al inicio del contenido por accesibilidad
                     const firstHeading = bodyEl.querySelector('h1,h2,h3,h4,h5,h6,article,section,p,ul,ol');
-                    if (firstHeading) firstHeading.setAttribute('tabindex', '-1'), firstHeading.focus({ preventScroll: false });
+                    if (firstHeading) {
+                        firstHeading.setAttribute('tabindex', '-1');
+                        // Pequeño delay para asegurar que el modal esté completamente visible
+                        setTimeout(() => {
+                            firstHeading.focus({ preventScroll: false });
+                        }, 100);
+                    }
 
                 } catch (err) {
                     loader.classList.add('d-none');
                     bodyEl.innerHTML = `
-        <div class="alert alert-danger" role="alert">
-          No se pudo cargar el documento (<code>${file}</code>). Por favor, verifica que el archivo exista en <strong>/docs</strong>.
-        </div>`;
+                    <div class="alert alert-danger" role="alert">
+                        No se pudo cargar el documento (<code>${file}</code>). Por favor, verifica que el archivo exista en <strong>/docs</strong>.
+                    </div>`;
                     console.error('Error cargando política:', err);
                 }
             });
 
-            // Limpieza defensiva de backdrops cuando se esconde (evita “pantalla oscura”)
-            modal.addEventListener('hidden.bs.modal', () => {
-                document.body.classList.remove('modal-open');
-                document.body.style.removeProperty('padding-right');
-                document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
-            });
         })();
     </script>
 
@@ -1011,26 +1023,33 @@
             const privacyModalEl = document.getElementById('privacy-modal');
             const privacyModal = new bootstrap.Modal(privacyModalEl);
             const privacyCheck = document.getElementById('privacy-accept-check');
-            const privacyAcceptBtn = document.getElementById('privacy-accept');
-            const privacyCloseBtn = privacyModalEl.querySelector('.btn-close');
+            const privacyCloseBtn = privacyModalEl.querySelector('.btn-close'); // Mantener solo si necesitas la X
 
-            const politicasModalEl = document.getElementById('modalPolitica');
-            const politicasModal = new bootstrap.Modal(politicasModalEl);
-            const politicasTitleEl = document.getElementById('modalPoliticaTitle');
-            const politicasBodyEl = document.getElementById('modalPoliticaBody');
+            // Guardar el contenido original del modal de privacidad
+            const privacyOriginalContent = privacyModalEl.innerHTML;
 
-            // Limpieza total de backdrops y del estado modal del body
+            // Función para limpiar backdrops
             function cleanupBackdrops() {
+                document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+                    backdrop.remove();
+                });
                 document.body.classList.remove('modal-open');
                 document.body.style.removeProperty('padding-right');
-                document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+                document.body.style.removeProperty('overflow');
+                document.body.offsetHeight;
             }
 
-            // Impedir cerrar el modal de privacidad si no aceptaron (salvo para abrir política)
-            let ALLOW_TEMP_HIDE = false;
+            // Permitir cerrar solo si ya aceptó
             privacyModalEl.addEventListener('hide.bs.modal', (ev) => {
-                if (get(KEY_PRIV) !== true && !ALLOW_TEMP_HIDE) {
-                    ev.preventDefault(); // no se cierra hasta aceptar
+                if (get(KEY_PRIV) !== true) {
+                    ev.preventDefault();
+                }
+            });
+
+            // SOLUCIÓN MEJORADA: Remover foco antes de cerrar modal de privacidad
+            privacyModalEl.addEventListener('hide.bs.modal', function () {
+                if (document.activeElement && document.activeElement.closest('#privacy-modal')) {
+                    document.activeElement.blur();
                 }
             });
 
@@ -1044,47 +1063,130 @@
             }
             refreshPrivacyCloseBtn();
 
-            // Aceptación: marca, cierra y limpia overlay inmediatamente
-            privacyCheck.addEventListener('change', () => {
-                privacyAcceptBtn.disabled = !privacyCheck.checked;
-                if (privacyCheck.checked) {
+            // SOLUCIÓN SIMPLIFICADA: Solo el checkbox controla la aceptación
+            privacyCheck.addEventListener('change', function () {
+                if (this.checked) {
                     set(KEY_PRIV, true);
                     refreshPrivacyCloseBtn();
-                    privacyModal.hide();
+
+                    // Remover el foco del checkbox antes de cerrar el modal
+                    this.blur();
+
+                    // Pequeña pausa para permitir que el blur se procese
+                    setTimeout(() => {
+                        privacyModal.hide();
+                        cleanupBackdrops();
+                    }, 50);
                 }
             });
 
-            // Tras ocultar el modal de privacidad, limpia backdrops (evita pantalla oscura)
-            privacyModalEl.addEventListener('hidden.bs.modal', () => {
-                cleanupBackdrops();
-            });
-
-            // Abrir la política de datos desde el modal de privacidad SIN solapar backdrops
+            // SOLUCIÓN DEFINITIVA: Cambiar el contenido del mismo modal
             const linkOpenDatos = document.getElementById('open-datos-from-privacy');
             if (linkOpenDatos) {
                 linkOpenDatos.addEventListener('click', (e) => {
                     e.preventDefault();
-                    ALLOW_TEMP_HIDE = true;            // autoriza cerrar temporalmente
-                    // Espera a que termine de ocultarse para abrir el otro modal
-                    privacyModalEl.addEventListener('hidden.bs.modal', function onHidden() {
-                        privacyModalEl.removeEventListener('hidden.bs.modal', onHidden);
-                        cleanupBackdrops();
-                        const tpl = document.querySelector('#tpl-datos');
-                        politicasTitleEl.textContent = 'Protección y Prevención de Datos Personales';
-                        politicasBodyEl.innerHTML = tpl ? tpl.innerHTML : '<p>Contenido no disponible.</p>';
-                        politicasModal.show();
-                    }, { once: true });
-                    privacyModal.hide();
-                });
 
-                // Al cerrar el modal de políticas, si no aceptó aún, reabrimos privacidad
-                politicasModalEl.addEventListener('hidden.bs.modal', () => {
-                    cleanupBackdrops();
-                    if (get(KEY_PRIV) !== true) {
-                        setTimeout(() => privacyModal.show(), 150);
-                    }
+                    // Cambiar el contenido del modal actual a la política de datos
+                    privacyModalEl.innerHTML = `
+                    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                        <div class="modal-content no-copy" style="background:#0d1b2a;color:#fff;border:1px solid rgba(255,255,255,.15);">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Política de Protección de Datos Personales</h5>
+                                <button type="button" class="btn-close btn-close-white" id="back-to-privacy-btn" aria-label="Volver"></button>
+                            </div>
+                            <div class="modal-body" id="politicas-content">
+                                <div id="policyLoading" class="text-center py-5">
+                                    <div class="spinner-border" role="status" aria-hidden="true"></div>
+                                    <div class="mt-3">Cargando contenido…</div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-light" id="close-politicas-btn">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                    // Cargar el contenido de la política
+                    fetch('docs/politica_proteccion_datos.html')
+                        .then(response => {
+                            if (!response.ok) throw new Error('Error al cargar');
+                            return response.text();
+                        })
+                        .then(html => {
+                            document.getElementById('politicas-content').innerHTML = html;
+                        })
+                        .catch(error => {
+                            document.getElementById('politicas-content').innerHTML = `
+                            <div class="alert alert-danger" role="alert">
+                                No se pudo cargar el documento. Error: ${error.message}
+                            </div>
+                        `;
+                        });
+
+                    // Configurar el botón de volver
+                    document.getElementById('back-to-privacy-btn').addEventListener('click', function () {
+                        this.blur(); // Remover foco antes de la acción
+                        setTimeout(() => {
+                            restorePrivacyContent();
+                        }, 50);
+                    });
+
+                    // Configurar el botón de cerrar
+                    document.getElementById('close-politicas-btn').addEventListener('click', function () {
+                        // Remover el foco del botón antes de cerrar
+                        this.blur();
+                        setTimeout(() => {
+                            privacyModal.hide();
+                            setTimeout(() => {
+                                restorePrivacyContent();
+                            }, 300);
+                        }, 50);
+                    });
                 });
             }
+
+            // Función para restaurar el contenido original de privacidad
+            function restorePrivacyContent() {
+                privacyModalEl.innerHTML = privacyOriginalContent;
+
+                // Re-conectar los event listeners
+                const newPrivacyCheck = document.getElementById('privacy-accept-check');
+                const newLinkOpenDatos = document.getElementById('open-datos-from-privacy');
+
+                if (newPrivacyCheck) {
+                    newPrivacyCheck.addEventListener('change', function () {
+                        if (this.checked) {
+                            set(KEY_PRIV, true);
+                            // Remover el foco antes de cerrar
+                            this.blur();
+                            setTimeout(() => {
+                                privacyModal.hide();
+                                cleanupBackdrops();
+                            }, 50);
+                        }
+                    });
+                }
+
+                if (newLinkOpenDatos) {
+                    newLinkOpenDatos.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        // Re-ejecutar el mismo código para abrir políticas
+                        linkOpenDatos.dispatchEvent(new Event('click'));
+                    });
+                }
+
+                refreshPrivacyCloseBtn();
+            }
+
+            // Event listener para cuando el modal se oculta completamente
+            privacyModalEl.addEventListener('hidden.bs.modal', function () {
+                // Asegurarse de que no quede foco en elementos ocultos
+                if (document.activeElement && document.activeElement.closest('.modal')) {
+                    document.activeElement.blur();
+                }
+                cleanupBackdrops();
+            });
 
             // Mostrar modal de privacidad si no se ha aceptado
             document.addEventListener('DOMContentLoaded', () => {
@@ -1094,7 +1196,7 @@
             });
 
             // ---------------------------------------
-            // (Si usas también el banner de cookies)
+            // CÓDIGO DE COOKIES (sin cambios)
             const banner = document.getElementById('cookie-banner');
             const btnAccept = document.getElementById('cookie-accept');
             const btnReject = document.getElementById('cookie-reject');
@@ -1107,46 +1209,55 @@
             function applyConsent() {
                 const consent = get(KEY_COOKIES);
                 const optional = !!get(KEY_OPT);
-                // if (consent === 'accepted' && optional) { loadAnalytics(); }
             }
+
             function initCookiesUI() {
                 const consent = get(KEY_COOKIES);
                 if (!consent) banner.classList.add('show');
             }
 
             if (btnAccept && btnReject && btnManage) {
-                btnAccept.addEventListener('click', () => {
+                btnAccept.addEventListener('click', function () {
+                    this.blur();
                     set(KEY_COOKIES, 'accepted');
                     set(KEY_OPT, true);
                     banner.classList.remove('show');
                     applyConsent();
                 });
-                btnReject.addEventListener('click', () => {
+
+                btnReject.addEventListener('click', function () {
+                    this.blur();
                     set(KEY_COOKIES, 'rejected');
                     set(KEY_OPT, false);
                     banner.classList.remove('show');
                     applyConsent();
                 });
-                btnManage.addEventListener('click', () => {
+
+                btnManage.addEventListener('click', function () {
+                    this.blur();
                     ckOptional.checked = !!get(KEY_OPT);
                     cookieModal.show();
                 });
-                prefsSaveAccept.addEventListener('click', () => {
+
+                prefsSaveAccept.addEventListener('click', function () {
+                    this.blur();
                     set(KEY_COOKIES, 'accepted');
                     set(KEY_OPT, !!ckOptional.checked);
                     banner.classList.remove('show');
                     cookieModal.hide();
-                    // limpieza defensiva por si se solapa visualmente
                     setTimeout(cleanupBackdrops, 50);
                     applyConsent();
                 });
-                prefsSaveReject.addEventListener('click', () => {
+
+                prefsSaveReject.addEventListener('click', function () {
+                    this.blur();
                     set(KEY_COOKIES, 'rejected');
                     set(KEY_OPT, false);
                     banner.classList.remove('show');
                     cookieModal.hide();
                     setTimeout(cleanupBackdrops, 50);
                 });
+
                 document.addEventListener('DOMContentLoaded', initCookiesUI);
             }
         })();
