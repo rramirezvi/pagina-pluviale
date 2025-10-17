@@ -633,7 +633,10 @@
                         <div class="p-3">
                             <h5 class="mb-1">Nuestra oficina</h5>
                             <p class="mb-2 small text-white-50">
-                                Dirección: <span class="text-white">Edificio San Francisco 300, piso 8 – Guayaquil,
+                                Dirección: <span class="text-white">General Córdova #1021 y Av. 09 de Octubre
+                                    Edificio San Francisco 300
+                                    Piso 08
+                                    Oficina 01 - Guayaquil,
                                     Ecuador</span><br>
                                 Horario: Lun–Vie 09:00–18:00
                             </p>
@@ -649,7 +652,6 @@
         </div>
     </section>
     <!-- FIN CONTACTO -->
-
 
     <!-- TRABAJA CON NOSOTROS -->
     <section id="trabaja" class="section">
@@ -668,16 +670,16 @@
                     </ul>
 
                     <div class="d-flex flex-wrap gap-2">
-                        <!-- Botón que abre el modal con el formulario embebido -->
-                        <button class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#modalTrabajo"
-                            data-form="https://docs.google.com/forms/d/e/TU_URL_DE_GOOGLE_FORM/viewform?embedded=true">
+                        <!-- Enlace directo al formulario de Google -->
+                        <p class="small text-white-50 mt-2">
+                            <i class="bi bi-info-circle me-1"></i>
+                            El formulario requiere acceso a Google para verificar tu identidad y permitir subir archivos
+                            de manera segura.
+                        </p>
+                        <a class="btn btn-primary px-4"
+                            href="https://docs.google.com/forms/d/e/1FAIpQLSeLl_XtvAtH1CvZsNLJMjtPuRxJ7GllaCaQfMd3b3oc4dFfSg/viewform"
+                            target="_blank" rel="noopener">
                             Postularme
-                        </button>
-                        <!-- Fallback: abre en nueva pestaña -->
-                        <a class="btn btn-outline-light px-4"
-                            href="https://docs.google.com/forms/d/e/TU_URL_DE_GOOGLE_FORM/viewform" target="_blank"
-                            rel="noopener">
-                            Abrir formulario en nueva pestaña
                         </a>
                     </div>
 
@@ -724,8 +726,8 @@
                 <div class="col-md-4">
                     <h6 class="footer-title">Dirección</h6>
                     <address class="mb-2 footer-addr">
-                        Edificio San Francisco 300, piso 8<br>
-                        Av. 9 de Octubre y Boyacá<br>
+                        General Córdova #1021 y Av. 09 de Octubre<br>
+                        Edificio San Francisco 300 Piso 08 Oficina 01<br>
                         Guayaquil, Ecuador
                     </address>
                     <a class="footer-link"
@@ -846,39 +848,6 @@
                         Contacto o quejas: <a
                             href="mailto:transparencia@estradacrow.com.ec">transparencia@estradacrow.com.ec</a>
                     </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ================================================ -->
-
-    <!-- =============== MODAL: TRABAJA CON NOSOTROS =============== -->
-    <div class="modal fade" id="modalTrabajo" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content" style="background:#0d1b2a;color:#fff;border:1px solid rgba(255,255,255,.15);">
-                <div class="modal-header">
-                    <h5 class="modal-title">Postulación — Estrada &amp; Crow</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Cerrar"></button>
-                </div>
-
-                <div class="modal-body p-0">
-                    <!-- Contenedor para el iFrame -->
-                    <div id="trabajo-iframe-wrap" style="height:70vh; position:relative;">
-                        <!-- Skeleton loader -->
-                        <div id="trabajo-skel"
-                            style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:12px; background:rgba(255,255,255,.03);">
-                            <div class="spinner-border text-light" role="status" aria-hidden="true"></div>
-                            <span class="text-white-50">Cargando formulario…</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <a id="trabajo-open-new" href="#" target="_blank" rel="noopener" class="btn btn-outline-light">
-                        Abrir en nueva pestaña
-                    </a>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -1265,53 +1234,6 @@
 
     <script>
         (function () {
-            const BTN_SELECTOR = '[data-bs-target="#modalTrabajo"][data-form]';
-            const modalEl = document.getElementById('modalTrabajo');
-            if (!modalEl) return; // por si este script se carga en otra página
-
-            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-            const wrap = document.getElementById('trabajo-iframe-wrap');
-            const skel = document.getElementById('trabajo-skel');
-            const openNew = document.getElementById('trabajo-open-new');
-
-            let formURL = null;
-
-            // 1) Captura la URL del formulario desde el botón de apertura
-            document.querySelectorAll(BTN_SELECTOR).forEach(btn => {
-                btn.addEventListener('click', () => {
-                    formURL = btn.getAttribute('data-form');
-                    if (openNew && formURL) openNew.href = formURL.replace('?embedded=true', ''); // fallback limpio
-                });
-            });
-
-            // 2) Carga perezosa del iFrame al abrir el modal (una sola vez)
-            modalEl.addEventListener('show.bs.modal', () => {
-                if (!formURL) return;
-                if (!wrap.querySelector('iframe')) {
-                    const ifr = document.createElement('iframe');
-                    ifr.title = 'Formulario de postulación';
-                    ifr.src = formURL;                  // debe ser ...viewform?embedded=true
-                    ifr.style.width = '100%';
-                    ifr.style.height = '100%';
-                    ifr.style.border = '0';
-                    ifr.loading = 'lazy';
-                    wrap.appendChild(ifr);
-                    // Oculta skeleton cuando cargue
-                    ifr.addEventListener('load', () => { if (skel) skel.style.display = 'none'; }, { once: true });
-                }
-            });
-
-            // 3) Limpieza defensiva de backdrops si lo necesitas
-            modalEl.addEventListener('hidden.bs.modal', () => {
-                document.body.classList.remove('modal-open');
-                document.body.style.removeProperty('padding-right');
-                document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
-            });
-        })();
-    </script>
-
-    <script>
-        (function () {
             const params = new URLSearchParams(window.location.search);
             const sent = params.get('sent'); // "1" éxito, "0" error
             const rawMsg = params.get('msg');
@@ -1428,10 +1350,6 @@
             }
         })();
     </script>
-
-
-
-
 </body>
 
 </html>
